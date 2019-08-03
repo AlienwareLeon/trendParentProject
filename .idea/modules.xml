@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/eureka-server/eureka-server.iml" filepath="$PROJECT_DIR$/eureka-server/eureka-server.iml" />
+      <module fileurl="file://$PROJECT_DIR$/third-part-index-data-project/third-part-index-data-project.iml" filepath="$PROJECT_DIR$/third-part-index-data-project/third-part-index-data-project.iml" />
       <module fileurl="file://$PROJECT_DIR$/trendParentProject.iml" filepath="$PROJECT_DIR$/trendParentProject.iml" />
     </modules>
   </component>
