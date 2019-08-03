@@ -6,11 +6,12 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="trendParentProject" />
+        <module name="eureka-server" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="trendParentProject" target="1.5" />
+      <module name="eureka-server" target="1.8" />
+      <module name="trendParentProject" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>

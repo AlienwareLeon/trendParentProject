@@ -1,0 +1,17 @@
+eureka:
+  instance:
+    hostname: localhost
+  client:
+    registerWithEureka: false
+    fetchRegistry: false
+    serviceUrl:
+      defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka/
+
+spring:
+  application:
+    name: eureka-server
+
+#配置文件，提供 eureka 的相关信息。
+#hostname: localhost 表示主机名称。
+#registerWithEureka：false. 表示是否注册到服务器。 因为它本身就是服务器，无需把自己注册到服务器了。
+#fetchRegistry: false. 表示是否获取服务器的注册信息，和上面同理，这里也设置为 false。
