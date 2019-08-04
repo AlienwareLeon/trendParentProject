@@ -7,11 +7,13 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="eureka-server" />
+        <module name="index-gather-store-service" />
         <module name="third-part-index-data-project" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="eureka-server" target="1.8" />
+      <module name="index-gather-store-service" target="1.8" />
       <module name="third-part-index-data-project" target="1.8" />
       <module name="trendParentProject" target="1.8" />
     </bytecodeTargetLevel>
