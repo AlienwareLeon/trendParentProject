@@ -4,7 +4,7 @@ eureka:
       defaultZone: http://localhost:8761/eureka/
 spring:
   application:
-    name: index-zuul-service
+    name: zuul-service
   zipkin:
     base-url: http://localhost:9411
 zuul:
@@ -15,6 +15,9 @@ zuul:
     api-b:
       path: /api-backtest/**
       serviceId: TREND-TRADING-BACKTEST-SERVICE
+    api-c:
+      path: /api-view/**
+      serviceId: TREND-TRADING-BACKTEST-VIEW
 
 #所有的访问 /api-codes/ 的请求，都会自动转到 INDEX-CODES-SERVICE 去
 #INDEX-CODES-SERVICE 有3个，就会在这3个之间来回切换
