@@ -18,6 +18,7 @@
       <module name="index-codes-service" target="1.8" />
       <module name="index-data-service" target="1.8" />
       <module name="index-gather-store-service" target="1.8" />
+      <module name="index-zuul-service" target="1.8" />
       <module name="third-part-index-data-project" target="1.8" />
       <module name="trendParentProject" target="1.8" />
     </bytecodeTargetLevel>
