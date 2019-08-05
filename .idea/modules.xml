@@ -6,8 +6,12 @@
       <module fileurl="file://$PROJECT_DIR$/index-codes-service/index-codes-service.iml" filepath="$PROJECT_DIR$/index-codes-service/index-codes-service.iml" />
       <module fileurl="file://$PROJECT_DIR$/index-data-service/index-data-service.iml" filepath="$PROJECT_DIR$/index-data-service/index-data-service.iml" />
       <module fileurl="file://$PROJECT_DIR$/index-gather-store-service/index-gather-store-service.iml" filepath="$PROJECT_DIR$/index-gather-store-service/index-gather-store-service.iml" />
+      <module fileurl="file://$PROJECT_DIR$/index-zuul-service/index-zuul-service.iml" filepath="$PROJECT_DIR$/index-zuul-service/index-zuul-service.iml" />
       <module fileurl="file://$PROJECT_DIR$/third-part-index-data-project/third-part-index-data-project.iml" filepath="$PROJECT_DIR$/third-part-index-data-project/third-part-index-data-project.iml" />
+      <module fileurl="file://$PROJECT_DIR$/trend-trading-backtest-service/trend-trading-backtest-service.iml" filepath="$PROJECT_DIR$/trend-trading-backtest-service/trend-trading-backtest-service.iml" />
+      <module fileurl="file://$PROJECT_DIR$/trend-trading-backtest-view/trend-trading-backtest-view.iml" filepath="$PROJECT_DIR$/trend-trading-backtest-view/trend-trading-backtest-view.iml" />
       <module fileurl="file://$PROJECT_DIR$/trendParentProject.iml" filepath="$PROJECT_DIR$/trendParentProject.iml" />
+      <module fileurl="file://$PROJECT_DIR$/zuul-service/zuul-service.iml" filepath="$PROJECT_DIR$/zuul-service/zuul-service.iml" />
     </modules>
   </component>
 </project>

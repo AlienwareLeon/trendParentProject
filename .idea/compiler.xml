@@ -10,7 +10,11 @@
         <module name="index-codes-service" />
         <module name="index-data-service" />
         <module name="index-gather-store-service" />
+        <module name="index-zuul-service" />
         <module name="third-part-index-data-project" />
+        <module name="trend-trading-backtest-service" />
+        <module name="trend-trading-backtest-view" />
+        <module name="zuul-service" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
@@ -18,9 +22,12 @@
       <module name="index-codes-service" target="1.8" />
       <module name="index-data-service" target="1.8" />
       <module name="index-gather-store-service" target="1.8" />
-      <module name="index-zuul-service" target="1.8" />
+      <module name="index-zuul-service" target="1.7" />
       <module name="third-part-index-data-project" target="1.8" />
+      <module name="trend-trading-backtest-service" target="1.8" />
+      <module name="trend-trading-backtest-view" target="1.8" />
       <module name="trendParentProject" target="1.8" />
+      <module name="zuul-service" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>
