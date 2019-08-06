@@ -1,51 +1,290 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:include="include/header::html('趋势投资模拟回测')" ></head>
-
 <body >
 <script>
+    var chart4Profit = null;
+
     $(function(){
-	        var data4Vue = {
+        var data4Vue = {
+            indexes: [],
+            currentIndex: '000300',
 
-			};
+            indexDatas:[],
+            dates:[],
+            closePoints:[],
 
-            //ViewModel
-            var vue = new Vue({
-                el: '#workingArea',
-                data: data4Vue,
-                mounted:function(){ //mounted　表示这个 Vue 对象加载成功了
-                    this.init();
+            flushDate: true,
+
+            indexStartDate: null,
+            indexEndDate: null,
+            startDate: null,
+            endDate: null,
+
+        };
+
+        //ViewModel
+        var vue = new Vue({
+            el: '#workingArea',
+            data: data4Vue,
+            mounted:function(){ //mounted　表示这个 Vue 对象加载成功了
+                this.init();
+                $("[data-toggle='tooltip']").tooltip();
+            },
+            methods: {
+                init:function(){
+                    var url =  "http://127.0.0.1:8031/api-codes/codes";
+                    axios.get(url).then(function(response) {
+                        vue.indexes = response.data;
+                        vue.$nextTick(function(){
+                            vue.simulate();
+                        });
+                    });
                 },
-                methods: {
-                    init:function(){
+                simulate:function(){
+                    var url =  "http://127.0.0.1:8031/api-backtest/simulate/"+vue.currentIndex+"/"+vue.startDate+"/"+vue.endDate+"/";
+                    axios.get(url).then(function(response) {
+                        //清空原数据
+                        vue.indexDatas = [];
+                        vue.closePoints = [];
+                        vue.dates = [];
 
+                        //获取返回数据
+
+                        vue.indexDatas = response.data.indexDatas;
+                        vue.dates = new Array();
+                        vue.closePoints = new Array();
+
+                        //日期
+                        vue.indexStartDate = response.data.indexStartDate;
+                        vue.indexEndDate = response.data.indexEndDate;
+
+                        //指数数据
+                        for(i in vue.indexDatas){
+                            var indexData = vue.indexDatas[i];
+                            vue.dates.push(indexData.date);
+                            vue.closePoints.push(indexData.closePoint);
+                        }
+
+                        //收益图表
+                        chart4Profit.config.data.labels = vue.dates;
+                        chart4Profit.config.data.datasets[0].label = vue.currentIndex;
+                        chart4Profit.config.data.datasets[0].data = vue.closePoints;
+                        chart4Profit.update();
+
+                        if(vue.flushDate)
+                            vue.updateDate();
+
+                    });
+                },
+                changeParam:function(){
+                    vue.flushDate = false;
+                    vue.simulate();
+                },
+                changeParamWithFlushDate:function(){
+                    vue.flushDate = true;
+                    vue.startDate = null;
+                    vue.endDate = null;
+                    vue.simulate();
+                },
+                updateDate:function(){
+                    vue.startDate = vue.indexStartDate;
+                    vue.endDate = vue.indexEndDate;
+
+                    console.log("vue.indexStartDate："+vue.indexStartDate);
+
+                    //需要先destroy，否则后续新的日期范围如果超出了前面的日期范围，会出冲突
+                    $('#date4Start').datepicker("destroy");
+                    $('#date4Start').datepicker({
+                        "format": 'yyyy-mm-dd',
+                        "language": "zh-CN",
+                        autoclose: true,
+                        startDate: vue.indexStartDate,
+                        endDate: vue.indexEndDate,
+                    }).on("changeDate",function(e){
+                        var month = (e.date.getMonth()+1);
+                        if(month <10)
+                            month = '0'+month;
+                        var day = (e.date.getDate());
+                        if(day <10)
+                            day = '0'+day;
+                        vue.startDate = e.date.getFullYear()+"-"+month+"-"+day;
+
+                        if(!vue.checkDateRange()){
+                            $('#date4Start').datepicker('update', vue.indexStartDate);
+                            return;
+                        }
+
+                        vue.changeParam();
+                    });
+
+                    $('#date4End').datepicker("destroy");
+                    $('#date4End').datepicker({
+                        "format": 'yyyy-mm-dd',
+                        "language": "zh-CN",
+                        autoclose: true,
+                        startDate: vue.indexStartDate,
+                        endDate: vue.indexEndDate,
+                    }).on("changeDate",function(e){
+                        var month = (e.date.getMonth()+1);
+                        if(month <10)
+                            month = '0'+month;
+                        var day = (e.date.getDate());
+                        if(day <10)
+                            day = '0'+day;
+                        vue.endDate = e.date.getFullYear()+"-"+month+"-"+day;
+                        if(!vue.checkDateRange()){
+                            $('#date4End').datepicker('update', vue.indexEndDate);
+                            return;
+                        }
+
+                        vue.changeParam();
+
+                    });
+
+                    $('#date4Start').datepicker('update', vue.indexStartDate);
+                    $('#date4End').datepicker('update', vue.indexEndDate);
+                },
+                checkDateRange:function(){
+                    if(null==vue.startDate || null==vue.endDate)
+                        return true;
+
+                    var strStartDate = vue.startDate.replace(/-/g, '/')
+                    var startTime = new Date(strStartDate).getTime();
+                    var strEndDate = vue.endDate.replace(/-/g, '/')
+                    var endTime = new Date(strEndDate).getTime();
+                    if(startTime>endTime){
+                        alert("开始日期不能大于日期！");
+                        return false;
+                    }
+                    return true;
+
+                }
+            }
+        });
+
+        var ctx4Profit = $(".canvas4Profit")[0].getContext('2d');
+        chart4Profit = new Chart(ctx4Profit, {
+            type: 'line',
+            data: {
+                labels: '',
+                datasets: [
+                    {
+                        label: '',
+                        data: [],
+                        borderColor: '#FF4040',
+                        backgroundColor: '#FF4040',
+                        borderWidth: 1.2,
+                        pointRadius: 0,
+                        fill: false,
+                        lineTension: 0,
+                    }
+                ]
+            },
+            options: {
+                title: {
+                    display: true,
+                    text: '指数趋势投资收益对比图'
+                },
+                responsive: true,
+                responsiveAnimationDuration:3000,
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: false,
+                        }
+                    }]
+                },
+                tooltips: {
+                    intersect: false,
+                    mode: 'index',
+//                      axis: 'y',
+                    callbacks: {
+                        label: function(tooltipItem, myData) {
+                            var label = myData.datasets[tooltipItem.datasetIndex].label || '';
+                            if (label) {
+                                label += ': ';
+                            }
+                            label += parseFloat(tooltipItem.value).toFixed(2);
+                            return label;
+                        }
                     }
                 }
-            });
+            }
+        });
+
     });
-    
 
 </script>
 
 <style>
-table.inputTable{
-	width:100%;
-}
-table.inputTable td{
-	padding:20px 20px;
-}
+	table.inputTable{
+		width:100%;
+	}
+	table.inputTable td{
+		padding:20px 20px;
+	}
 
-table{
-	margin:20px;
-}
+	table{
+		margin:20px;
+	}
 
-div#workingArea{
-	margin:50px;
-}
+	div#workingArea{
+		margin:50px;
+	}
 </style>
 
 <div id="workingArea">
-	        <span class="label label-info">回测参数</span>
+	<span class="label label-info">回测参数</span>
+	<table class="inputTable ">
+		<tr>
+			<td width="25%">
+                <span data-toggle="tooltip" data-placement="top" title="选择某一个指数进行模拟回测">
+                    请选择指数:<span class="glyphicon glyphicon-question-sign" > </span>
+                </span>
+			</td>
+			<td width="25%">
+				<select @change="changeParamWithFlushDate" v-model="currentIndex" class="indexSelect form-control">
+					<option v-for="bean in indexes " :value="bean.code">{{bean.name}} - ( {{bean.code}} )</option>
+				</select>
+			</td>
+			<td width="25%"></td>
+			<td width="25%"></td>
+		</tr>
+		<tr>
+			<td>
+                        <span data-toggle="tooltip" data-placement="top" title="指定模拟回测的开始日期，默认是当前指数最开始的日期">
+                            开始日期:<span class="glyphicon glyphicon-question-sign  " > </span>
+                        </span>
+			</td>
+			<td>
+				<div class="form-group">
+					<div class="input-group date" id="date4Start">
+						<input  type="text" readOnly="readOnly" class="form-control"  ><span class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>
+					</div>
+				</div>
+			</td>
+			<td>
+                        <span data-toggle="tooltip" data-placement="top" title="指定模拟回测的结束日期，默认是当前指数最后的日期">
+                            结束日期:<span class="glyphicon glyphicon-question-sign  " > </span>
+                        </span>
+			</td>
+			<td>
+				<div class="form-group">
+					<div class="input-group date" id="date4End">
+						<input type="text" readOnly="readOnly" class="form-control"  ><span class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>
+					</div>
+				</div>
+			</td>
+
+		</tr>
+	</table>
+
+	<div class="label label-warning">收益对比图</div>
+
+	<div  class="div4chart" style="margin:0px auto; width:80%">
+		<canvas class='canvas4Profit'></canvas>
+	</div>
 </div>
 
 <div th:replace="include/footer::html" ></div>
