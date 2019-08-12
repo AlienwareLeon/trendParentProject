@@ -29,7 +29,7 @@ public class ThirdPartIndexDataApplication {
                     }
                 }
             }
-        }
+        }//
         if (!NetUtil.isUsableLocalPort(port)) {
             System.err.printf("端口%d被占用，无法启动%n",port);
             System.exit(1);

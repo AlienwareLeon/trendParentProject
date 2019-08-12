@@ -1,5 +1,6 @@
 package own.leon.trend;
 
+import brave.sampler.Sampler;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.NetUtil;
@@ -10,6 +11,7 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
 import org.springframework.cloud.openfeign.EnableFeignClients;
+import org.springframework.context.annotation.Bean;
 
 import java.util.Scanner;
 import java.util.concurrent.ExecutionException;
@@ -74,6 +76,10 @@ public class TrendTradingBackTestServiceApplication {
             System.exit(1);
         }
         new SpringApplicationBuilder(TrendTradingBackTestServiceApplication.class).properties("server.port="+ port).run(args);
+    }
+    @Bean
+    public Sampler defaultSampler() {
+        return Sampler.ALWAYS_SAMPLE;
     }
 }
 //@EnableFeignClients 启动 Feign 方式

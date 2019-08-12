@@ -15,3 +15,4 @@ spring:
 #hostname: localhost 表示主机名称。
 #registerWithEureka：false. 表示是否注册到服务器。 因为它本身就是服务器，无需把自己注册到服务器了。
 #fetchRegistry: false. 表示是否获取服务器的注册信息，和上面同理，这里也设置为 false。
+#defaultZone： http://${eureka.instance.hostname}:${server.port}/eureka/ 自己作为服务器，公布出来的地址。 后续微服务要注册到 eureka server, 使用地址： http://localhost:8761/eureka/
