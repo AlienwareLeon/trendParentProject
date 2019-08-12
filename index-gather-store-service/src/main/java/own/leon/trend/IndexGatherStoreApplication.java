@@ -58,5 +58,7 @@ public class IndexGatherStoreApplication {
 
 /*
 * @EnableHystrix启动断路器
-*@EnableCaching启用缓存， redisPort， 用于判断 redis 服务器是否启动
+* 在获取第三方指数数据fetch_indexes_from_third_part 添加@HystrixCommand(fallbackMethod = "third_part_not_connected")，
+* 表示如果获取第三数据失败，自动调用third_part_not_connected并且返回
+*@EnableCaching启用缓存， redisPort，用于判断 redis 服务器是否启动
 * */

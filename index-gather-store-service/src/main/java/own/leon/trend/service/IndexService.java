@@ -46,7 +46,7 @@ public class IndexService {
     }
 
     public List<Index> fetch_indexes_from_third_part() {
-        List<Map> temp = restTemplate.getForObject("http://127.0.0.1:8090/indexes/codes.json",List.class);
+        List<Map> temp = restTemplate.getForObject("http://127.0.0.1:8090/indexes/codes.json",List.class); //获取第三方服务的地址
         return map2Index(temp);
     }
 
@@ -70,7 +70,7 @@ public class IndexService {
         }
         return indexes;
     }
-}
+} //获取内容是Map类型， map2Index把 Map 转换为 Index
 
 
 /*

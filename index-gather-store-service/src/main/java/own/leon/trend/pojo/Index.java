@@ -3,8 +3,8 @@ package own.leon.trend.pojo;
 import java.io.Serializable;
 
 public class Index implements Serializable {
-    String code;
-    String name;
+    String code;  //指数名称
+    String name; //指数代码
 
     public String getCode() {
         return code;

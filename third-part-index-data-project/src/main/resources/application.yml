@@ -5,3 +5,7 @@ eureka:
 spring:
   application:
     name: third-part-index-data-project
+
+
+#注册额中心的地址是 http://localhost:8761/eureka/，与 eureka server 里的application.yml 中的 defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka/ 对应
+#注册中心里，本应用的名称就是 third-part-index-data-project

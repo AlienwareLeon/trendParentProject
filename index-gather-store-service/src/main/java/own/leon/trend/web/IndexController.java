@@ -32,5 +32,5 @@ public class IndexController {
 }
 
 /*
-控制类，访问getCodes的时候，调用indexService.fetch_indexes_from_third_part()
+访问getCodes的时候，调用indexService.fetch_indexes_from_third_part()
 * */
