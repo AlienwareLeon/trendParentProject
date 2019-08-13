@@ -1,8 +1,8 @@
 package own.leon.trend.pojo;
 
 public class IndexData {
-    String date;
-    float closePoint;
+    String date; //时间
+    float closePoint;//收盘价
 
     public String getDate() {
         return date;

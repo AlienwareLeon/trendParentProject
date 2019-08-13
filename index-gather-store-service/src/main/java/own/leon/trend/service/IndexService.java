@@ -33,7 +33,6 @@ public class IndexService {
 
     @CacheEvict(allEntries = true)
     public void remove(){
-
     }
     @Cacheable(key = "'all_codes'")
     public List<Index> store() {
