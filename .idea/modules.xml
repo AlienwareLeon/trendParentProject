@@ -4,8 +4,11 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/eureka-server/eureka-server.iml" filepath="$PROJECT_DIR$/eureka-server/eureka-server.iml" />
       <module fileurl="file://$PROJECT_DIR$/index-codes-service/index-codes-service.iml" filepath="$PROJECT_DIR$/index-codes-service/index-codes-service.iml" />
+      <module fileurl="file://$PROJECT_DIR$/index-config-server/index-config-server.iml" filepath="$PROJECT_DIR$/index-config-server/index-config-server.iml" />
       <module fileurl="file://$PROJECT_DIR$/index-data-service/index-data-service.iml" filepath="$PROJECT_DIR$/index-data-service/index-data-service.iml" />
       <module fileurl="file://$PROJECT_DIR$/index-gather-store-service/index-gather-store-service.iml" filepath="$PROJECT_DIR$/index-gather-store-service/index-gather-store-service.iml" />
+      <module fileurl="file://$PROJECT_DIR$/index-hystrix-dashboard/index-hystrix-dashboard.iml" filepath="$PROJECT_DIR$/index-hystrix-dashboard/index-hystrix-dashboard.iml" />
+      <module fileurl="file://$PROJECT_DIR$/index-turbine/index-turbine.iml" filepath="$PROJECT_DIR$/index-turbine/index-turbine.iml" />
       <module fileurl="file://$PROJECT_DIR$/index-zuul-service/index-zuul-service.iml" filepath="$PROJECT_DIR$/index-zuul-service/index-zuul-service.iml" />
       <module fileurl="file://$PROJECT_DIR$/third-part-index-data-project/third-part-index-data-project.iml" filepath="$PROJECT_DIR$/third-part-index-data-project/third-part-index-data-project.iml" />
       <module fileurl="file://$PROJECT_DIR$/trend-trading-backtest-service/trend-trading-backtest-service.iml" filepath="$PROJECT_DIR$/trend-trading-backtest-service/trend-trading-backtest-service.iml" />

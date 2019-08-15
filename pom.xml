@@ -12,6 +12,9 @@
     <module>zuul-service</module>
     <module>trend-trading-backtest-service</module>
     <module>trend-trading-backtest-view</module>
+      <module>index-config-server</module>
+    <module>index-hystrix-dashboard</module>
+      <module>index-turbine</module>
   </modules>
 
   <packaging>pom</packaging>

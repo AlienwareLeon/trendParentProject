@@ -9,7 +9,9 @@
 # 必要条件
 
 [JKD1.8](https://www.oracle.com/technetwork/java/javase/downloads/index.html)
-hutool
+
+
+
 ----------
 
 # 技术栈
@@ -30,14 +32,60 @@ hutool
 **Intellij IDEA2017，Maven，Git**
 
 ## 分布式：
-**SpringCloud(Finchley.RELEASE)**
+**SpringCloud**
 
 ## 数据来源本地的第三方数据(JSON)
 
 third-part-index-data-project---resources
 
+## 静态资源
+
+trend-trading-backtest-view--resources
+
 所有指数代码codes.json  closePoint收盘价
 
+----------
+# 微服务/端口总结
+
+## 微服务
+    
+     
+    <modules>
+    <module>eureka-server</module>
+    <module>third-part-index-data-project</module>
+    <module>index-gather-store-service</module>
+    <module>index-codes-service</module>
+    <module>index-data-service</module>
+    <module>index-zuul-service</module>
+    <module>trend-trading-backtest-service</module>
+    <module>trend-trading-backtest-view</module>
+    <module>index-hystrix-dashboard</module>
+    <module>index-turbine</module>
+    <module>index-config-server</module>
+    </modules>
+
+## 端口总结
+
+    eureka-server						8761
+    third-part-index-data-project		8090
+    index-gather-store-service			8001
+    index-codes-service				    8011,8012,8013
+    index-data-service					8021,8022,8023
+    index-zuul-service					8031
+    trend-trading-backtest-view			8041,8042,8043
+    trend-trading-backtest-service		8051,8052,8053
+    index-config-server					8060
+    index-hystrix-dashboard				8070
+    index-turbine						8080
+
+
+## 第三方
+
+     
+    redis									6379
+    zipkin									9411
+    rabbitmq								5672
+    
 ----------
 
 # 模块开发
@@ -319,4 +367,176 @@ http://127.0.0.1:8021/data/000300
 
 **client--IndexDataClient**
 
+使用 feign 模式从 INDEX-DATA-SERVICE 微服务获取数据。 
+与之前使用的 RestTemplate 方式不同，这里是声明式的,访问不了的时候，就去找 IndexDataClientFeignHystrix 要数据
+
+    fallback = IndexDataClientFeignHystrix.class) 
+    
+**client--IndexDataClientFeignHystrix**
+
+IndexDataClientFeignHystrix 实现了 IndexDataClient，所以就提供了对应的方法，当熔断发生的时候，对应的方法就会被调用了
+如果 INDEX-DATA-SERVICE 不可用或者不可访问，就会返回 0000-00-00 
+
+**service--BackTestService**
+
+提供所有模拟回测数据的微服务
+
+**web--BackTestController**
+
+**启动类：TrendTradingBackTestServiceApplication：**
+
+@EnableFeignClients注解用于启动Feign方式
+
+**修改网关模块 zuul-service 的 application.yml，增加回测数据服务**
+
+
+## 8.  trend-trading-backtest-view
+
+回测视图
+
+**pom.xml**
+
+增加 spring-boot-starter-thymeleaf jar, 用于对 thymeleaf 进行支持
+
+**ViewController**
+
+控制类
+
+**resources---static**
+
+静态资源
+
+
+
+**增加zuul-service里trend-trading-backtest-view网关**
+
+
+**view.html**
+
+展示页面，比较复杂。。。。
+
+
+data4Vue ：
+
+	indexs指数
+	
+	indexDatas 指数数据数组
+	dates 日期数组
+	closePoints 收盘点数组
+
+	
+
+    init:function()访问网关的 api-codes 获取所有指数代码
+	
+	changeParamWithFlushDate:function() 切换函数
+	
+	
+
+chart4Profit 对象
+
+1. 通过 $(".canvas4Profit")[0].getContext('2d') 拿到画布对应的上下文
+2. 基于上下文，创建 chart4Profit 对象
+3. 类型是 ‘line’： 曲线图
+4. 设置相关参数，如颜色，宽度，是否填充等等
+5. 设置标题为 指数趋势投资收益对比图
+6. responsive：true 表示有新数据的时候会重新画
+7. intersect: false和 mode: 'index', 表示 当鼠标移动的时候会自动显示提示信息
+8. callbacks: 表示提示信息的格式是： 标签名 ： 取两位小数的数值
+
+
+## 9. 服务链路追踪zipkin
+
+有多个微服务，分别是代码微服务和数据微服务，网关， 回测微服务，回测视图微服务，随着业务的增加，就会有越来越多的微服务存在，他们之间也会有更加复杂的调用关系
+
+这个调用关系，仅仅通过观察代码，会越来越难以识别，所以就需要通过 zipkin 服务链路追踪服务器 这个东西来用图片进行识别了
+
+
+       <!--zipkin-->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-zipkin</artifactId>
+        </dependency>
+
+		每个微服务都需要加上这个依赖
+
+
+
+      zipkin:
+    base-url: http://localhost:9411
+	每个微服务增加zipkin地址
+
+
+	
+	 
+    @Bean
+    public Sampler defaultSampler() {
+        return Sampler.ALWAYS_SAMPLE;
+    }
+
+	每个微服务启动类，增加Sampler，表示一直在取样
+
+
+**启动方法：java -jar zipkin-server-2.10.1-exec.jar**
+
+## 10.配置服务器/客户端 index-config-server:8060给8041视图
+
+微服务要做集群，这就意味着，会有多个微服务实例。 在业务上有时候需要修改一些配置信息，比如说 版本信息。 倘若没有配置服务， 那么就需要挨个修改微服务，挨个重新部署微服务，这样就比较麻烦。
+
+这些配置信息放在一个公共的地方，比如git, 然后通过配置服务器把它获取下来，然后微服务再从配置服务器上取下来。 
+
+这样只要修改git上的信息，那么同一个集群里的所有微服务都立即获取相应信息了，这样就大大节约了开发，上线和重新部署的时间了。
+
+先在 git 里保存 version 信息， 然后通过 IndexConfigServer 去获取 version 信息， 接着不同的视图微服务实例再去IndexConfigServer 里获取 version.。
+
+    
+    spring:
+      application:
+    name: index-config-server
+      cloud:
+    config:
+      label: master
+      server:
+    git:
+      uri: https://github.com/xxxx/trendConfig/
+      searchPaths: respo
+    eureka:
+      client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
+
+
+> name和eureka 信息略过不表。
+> 
+> config 配置信息里
+> uri 表示 git 地址：
+>  
+> https://github.com/xxxx/trendConfig/
+>  
+> 
+> label 表示 分支：
+>  
+> master
+>  
+> 
+> searchPaths 表示目录：
+>  
+> respo
+
+
+## 11. 分布式配置--消息总线BUS--rabiitMQ--广播配置服务器获取到的信息
+
+配置服务器和配置客户端的问题是当数据更新后，必须重启配置服务器和配置客户端才能生效。 这个在生产环境肯定是不可接受的。
+
+所以要能够做到实时刷新。 为了做到这一点，我们需要借助于 rabiitMQ 来广播配置服务器获取到的信息。
+
+业务逻辑是（view:8041 就代表端口是 8041 的视图实例）：
+
+1. 通过运行FreshConfigUtil类， 以 post 方式访问地址 http://localhost:8041/actuator/bus-refresh，通知 view:8041 刷新配置。 
+2. view:8041 告诉 index-config-server 获取新的配置数据
+3. index-config-server 从 git 拿到数据，返回给 view:8041
+4. view:8041 拿到数据不仅自己用了，还发给了 rabbitMQ
+5. rabbitMQ 拿到这个数据广播给其他的，比如 view:8042
+
+
+## 12.断路器监控index-turbine
 

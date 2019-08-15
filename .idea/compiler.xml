@@ -8,8 +8,11 @@
         <outputRelativeToContentRoot value="true" />
         <module name="eureka-server" />
         <module name="index-codes-service" />
+        <module name="index-config-server" />
         <module name="index-data-service" />
         <module name="index-gather-store-service" />
+        <module name="index-hystrix-dashboard" />
+        <module name="index-turbine" />
         <module name="index-zuul-service" />
         <module name="third-part-index-data-project" />
         <module name="trend-trading-backtest-service" />
@@ -20,8 +23,11 @@
     <bytecodeTargetLevel>
       <module name="eureka-server" target="1.8" />
       <module name="index-codes-service" target="1.8" />
+      <module name="index-config-server" target="1.8" />
       <module name="index-data-service" target="1.8" />
       <module name="index-gather-store-service" target="1.8" />
+      <module name="index-hystrix-dashboard" target="1.8" />
+      <module name="index-turbine" target="1.8" />
       <module name="index-zuul-service" target="1.7" />
       <module name="third-part-index-data-project" target="1.8" />
       <module name="trend-trading-backtest-service" target="1.8" />
