@@ -15,7 +15,7 @@
 4. 引入手续费计算
 5. 调制开始结束日期
 
-项目拓扑图：![项目拓扑图](https://raw.githubusercontent.com/AlienwareLeon/trendParentProject/master/%E9%A1%B9%E7%9B%AE%E6%8B%93%E6%89%91%E5%9B%BE.png)
+项目拓扑图：![拓扑图](https://raw.githubusercontent.com/AlienwareLeon/trendParentProject/master/%E9%A1%B9%E7%9B%AE%E6%8B%93%E6%89%91%E5%9B%BE.png)
 
 ----------
 
